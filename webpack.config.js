@@ -1,10 +1,17 @@
 const path = require('path')
+// 压缩文件
 const uglify = require('uglifyjs-webpack-plugin')
+// 打包HTML文件
 const htmlPlugin= require('html-webpack-plugin')
+// CSS分离
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
+// 需要同步检查html模板，所以需要引入node的glob对象使用
 const glob = require('glob')
+// 减少CSS冗余
 const PurifyCSSPlugin = require("purifycss-webpack")
+// webpack
 const webpack = require('webpack')
+// 转移静态资源
 const copyWebpackPlugin= require("copy-webpack-plugin")
 
 module.exports={
@@ -45,7 +52,7 @@ module.exports={
                     use:[ "css-loader","sass-loader"],
                     fallback: "style-loader"
                 })
-            },{
+            },{// 配置图片
                 test:/\.(png|jpg|gif)/,
                 use:[{
                     loader:'url-loader',
@@ -56,7 +63,7 @@ module.exports={
                         outputPath:'images/',
                     }
                 }]
-            },{
+            },{// 配置es6 react
                 test:/\.(js|jsx)$/,
                 exclude:/node_modules/,
                 loader:"babel-loader",
@@ -92,6 +99,7 @@ module.exports={
             // Give paths to parse for rules. These should be absolute!
             paths: glob.sync(path.join(__dirname, 'src/*.html')),
         }),
+        // 加入版权声明
         new webpack.BannerPlugin('dcbryant版权所有'),
         new copyWebpackPlugin([{
             // from:要打包的静态资源目录地址，这里的__dirname是指项目目录下，是node的一种语法，可以直接定位到本机的项目目录中。
